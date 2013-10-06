@@ -1,7 +1,7 @@
 % No convergence plot, no tolerance specification, uses GPU for most
 % calculations
 
-function GS_alg_fast_gpu_1_2()
+function GS_alg_fast_gpu()
 % Algorithm for calculating the phase and target approximation.
 % Also called from the trap_obj callback to update the phase and target
 % approximation plots.

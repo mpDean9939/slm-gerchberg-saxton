@@ -47,7 +47,8 @@ function slm_gui()
     % set figure 3 (control figure)
     figure(3);
     imshow(zeros(200,200), 'border', 'tight');
-    set(glb.f(3), 'position', [left bottom+height/2 width/2 height/2]);  
+    set(glb.f(3), 'position', [left bottom+height/2 width/2 height/2],...
+                  'KeyPressFcn', @keyPress_Callback);  
     
     % set figure 4 (hologram phase)
     figure(4);
@@ -63,16 +64,35 @@ function slm_gui()
     % show all figures
     set(glb.f(1:4), 'visible', 'on');
  
-        function params_Callback(source, eventdata)
-            t = num2cell(str2num(get(source, 'String')));
-            [glb.sz, glb.num, m, n, d] = deal(t{:});
-            
-            if glb.flag == true
-                glb.trap(:).delete;
-            end
-            
-            GS_initial(m, n, d);
+    % callback function for parameter control (fig 1)
+    function params_Callback(source, eventdata)
+        t = num2cell(str2num(get(source, 'String')));
+        [glb.sz, glb.num, m, n, d] = deal(t{:});
+
+        if glb.flag == true
+            glb.trap(:).delete;
         end
+
+        GS_initial(m, n, d);
+    end
+
+    % callback function for key presses (on fig 3)
+    function keyPress_Callback(source, eventdata)
+        glb.stepSz = 1; % set constant for testing
+        key = eventdata.Key;
+        mostRecent = glb.recent;
+        if mostRecent >= 0
+            switch key
+                case {'w', 'a', 's', 'd'}
+                    currentPos = glb.trap(mostRecent).getPosition;
+                    step = str2matrix(key, glb.stepSz);
+                    glb.trap(mostRecent).setPosition(currentPos+step);
+                case 'backspace'
+                    glb.trap(mostRecent).deletePoint;
+                case 'e'
+            end
+        end
+    end
     
 end
 

@@ -23,7 +23,7 @@ function GS_initial(m,n,d)
     for i=1:m
         for j=1:n
             v = v + 1;
-            glb.trap(v) = trap_obj(SQSZ, gca, N/2-(m+1)/2*d+i*d,N/2-(n+1)/2*d+j*d);
+            glb.trap(v) = trap_obj(v, SQSZ, gca, N/2-(m+1)/2*d+i*d,N/2-(n+1)/2*d+j*d);
             xcords = round(N/2-(m+1)/2*d+i*d-SQSZ/2):round(N/2-(m+1)/2*d+i*d+SQSZ/2);
             ycords = round(N/2-(n+1)/2*d+j*d-SQSZ/2):round(N/2-(n+1)/2*d+j*d+SQSZ/2);
             image(xcords, ycords) = 1;
