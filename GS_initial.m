@@ -13,12 +13,12 @@ function GS_initial(m,n,d)
     
     figure(3);
     v = 0;
-    for i = 1:m
-        for j = 1:n
+    for i = 1:n
+        for j = 1:m
             v = v + 1;
             glb.trap(v) = trap_obj(v, SQSZ, gca, N/2-(m+1)/2*d+i*d,N/2-(n+1)/2*d+j*d);
-            xcords = round(N/2-(m+1)/2*d+i*d-SQSZ/2):round(N/2-(m+1)/2*d+i*d+SQSZ/2);
-            ycords = round(N/2-(n+1)/2*d+j*d-SQSZ/2):round(N/2-(n+1)/2*d+j*d+SQSZ/2);
+            ycords = round(N/2-(m+1)/2*d+i*d-SQSZ/2):round(N/2-(m+1)/2*d+i*d+SQSZ/2);
+            xcords = round(N/2-(n+1)/2*d+j*d-SQSZ/2):round(N/2-(n+1)/2*d+j*d+SQSZ/2);
             image(xcords, ycords) = 1;
         end
     end
