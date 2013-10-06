@@ -12,7 +12,6 @@ function slm_gui()
     glb.f(4) = figure('visible', 'off');
     
     % make subplot handles (for updating plots in other functns)
-    % set rendering properties for image objects
     figure(2);    
         % glb.sub(1) = subplottight(2,2,1); <- unused subplot
     glb.sub(2) = subplottight(2,2,2); % source intensity
@@ -52,8 +51,9 @@ function slm_gui()
     
     % set figure 4 (hologram phase)
     figure(4);
-    glb.holo = imshow(zeros(200, 200), 'border', 'tight');
-    set(glb.f(4), 'position', [left-300 bottom 200 200],...
+    lcSz = [600 792];
+    glb.holo = imshow(zeros(lcSz), 'border', 'tight');
+    set(glb.f(4), 'position', [scnsize(3)-lcSz(2) bottom-50 lcSz(2) lcSz(1)],...
                   'Renderer', 'zbuffer');
               
     % set rendering properties for image objects 
@@ -61,9 +61,12 @@ function slm_gui()
     set(glb.ti, 'EraseMode', 'none'); 
     set(glb.tai, 'EraseMode', 'none');
     
-    % show all figures
-    set(glb.f(1:4), 'visible', 'on');
- 
+    % show all figures;
+    figure(4);
+    figure(2);
+    figure(3);
+    figure(1);
+    
     % callback function for parameter control (fig 1)
     function params_Callback(source, eventdata)
         t = num2cell(str2num(get(source, 'String')));

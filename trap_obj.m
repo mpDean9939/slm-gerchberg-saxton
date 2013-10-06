@@ -28,7 +28,7 @@ classdef trap_obj < impoint
     methods
         function obj = trap_obj(indx, sz, varargin) % varargin = axis, x, y
             obj = obj@impoint(varargin{:}); % call impoint constructor
-
+            
             obj.trap_sz = sz; 
             obj.prevPos = obj.getPosition;
             obj.index = indx;
@@ -48,16 +48,15 @@ classdef trap_obj < impoint
             % Call GS algorithm;
             function drawPoint(pos)
                 global glb;
+                    
+                SqSz = glb.sz;
                 
-                SQSZ = glb.sz;
-                W = 200; H = 200;  % <- set constant for testing
-                
-                prevX = round(obj.prevPos(2)-SQSZ/2):round(obj.prevPos(2)+SQSZ/2);
-                prevY = round(obj.prevPos(1)-SQSZ/2):round(obj.prevPos(1)+SQSZ/2);
+                prevX = round(obj.prevPos(2)-SqSz/2):round(obj.prevPos(2)+SqSz/2);
+                prevY = round(obj.prevPos(1)-SqSz/2):round(obj.prevPos(1)+SqSz/2);
                 glb.TARGET(prevX,prevY) = 0;
                 
-                currX = round(pos(2)-SQSZ/2):round(pos(2)+SQSZ/2);
-                currY = round(pos(1)-SQSZ/2):round(pos(1)+SQSZ/2);
+                currX = round(pos(2)-SqSz/2):round(pos(2)+SqSz/2);
+                currY = round(pos(1)-SqSz/2):round(pos(1)+SqSz/2);
                 glb.TARGET(currX, currY) = 1;
                 obj.prevPos = pos;
                 glb.recent = obj.index;
@@ -69,10 +68,10 @@ classdef trap_obj < impoint
         function deletePoint(objRef)
             global glb;
             pos = objRef.getPosition;
-            SQSZ = glb.sz;
+            SqSz = glb.sz;
             
-            currX = round(pos(2)-SQSZ/2):round(pos(2)+SQSZ/2);
-            currY = round(pos(1)-SQSZ/2):round(pos(1)+SQSZ/2);
+            currX = round(pos(2)-SqSz/2):round(pos(2)+SqSz/2);
+            currY = round(pos(1)-SqSz/2):round(pos(1)+SqSz/2);
             glb.TARGET(currX, currY) = 0;
             glb.recent = -1;
             objRef.delete;

@@ -26,7 +26,7 @@ function GS_alg_fast_gpu()
     % ---- Update Plots ---- 
     
     % hologram phase
-    p = hologram_phase;
+    p = duplicate_image(hologram_phase, 792, 600); %792x600: hardware dependent parameter
     phase2 = gather(p/max(max(p)));
     set(glb.holo, 'cdata', phase2); 
     
