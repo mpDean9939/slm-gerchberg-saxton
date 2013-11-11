@@ -1,6 +1,6 @@
 function slm_gui()
 % initializes GUI figures, along with figure positions & properties
-    global glb;
+    global glb; % struct to store data across functions
     close all; 
     
     glb.flag = false;
@@ -16,9 +16,9 @@ function slm_gui()
         % glb.sub(1) = subplottight(2,2,1); <- unused subplot
     glb.sub(2) = subplottight(2,2,2); % source intensity
     glb.sub(3) = subplottight(2,2,3); % target intensity
-        glb.ti = imshow(zeros(200,200));
+        glb.ti = imshow(zeros(200,200)); 
     glb.sub(4) = subplottight(2,2,4); % target approx. intensity
-        glb.tai = imshow(zeros(200,200));
+        glb.tai = imshow(zeros(200,200)); % 
     
     % get screen parameters
     scnsize = get(0,'ScreenSize');
@@ -47,12 +47,13 @@ function slm_gui()
     figure(3);
     imshow(zeros(200,200), 'border', 'tight');
     set(glb.f(3), 'position', [left bottom+height/2 width/2 height/2],...
-                  'KeyPressFcn', @keyPress_Callback);  
+                  'KeyPressFcn', @keyPress_Callback);
+            %      'WindowButtonDownFcn', @click_Callback);  
     
     % set figure 4 (hologram phase)
     figure(4);
     lcSz = [600 792];
-    glb.holo = imshow(zeros(lcSz), 'border', 'tight');
+    glb.holo = imshow(zeros(lcSz), 'border', 'tight'); % stores hologram data
     set(glb.f(4), 'position', [scnsize(3)-lcSz(2) bottom-50 lcSz(2) lcSz(1)],...
                   'Renderer', 'zbuffer');
               
@@ -67,13 +68,19 @@ function slm_gui()
     figure(3);
     figure(1);
     
-    % callback function for parameter control (fig 1)
+    % callback function for parameter control (on fig 1)
     function params_Callback(source, eventdata)
         t = num2cell(str2num(get(source, 'String')));
-        [glb.sz, glb.num, m, n, d] = deal(t{:});
-
+        [glb.sz, glb.num, m, n, d] = deal(t{:}); % 'sz' : the trap size, in pixels 
+                                                 % 'num' : number of iterations for the GS algorithm
+                                                 % 'm' : # of rows 
+                                                 % 'n' : # of columns
+                                                 % 'd' : distance between traps, in pixels
+        % clears old trap objects                                         
         if glb.flag == true
-            glb.trap(:).delete;
+            for i = 1:length(glb.trap)
+                glb.trap(i).deletePoint;
+            end
         end
 
         GS_initial(m, n, d);
@@ -84,18 +91,28 @@ function slm_gui()
         glb.stepSz = 1; % set constant for testing
         key = eventdata.Key;
         mostRecent = glb.recent;
-        if mostRecent >= 0
-            switch key
-                case {'w', 'a', 's', 'd'}
+
+        switch key
+            % moves the most recently clicked trap by the stepSz, in pixels
+            case {'w', 'a', 's', 'd'}
+                if mostRecent >= 0
                     currentPos = glb.trap(mostRecent).getPosition;
                     step = str2matrix(key, glb.stepSz);
                     glb.trap(mostRecent).setPosition(currentPos+step);
-                case 'backspace'
-                    glb.trap(mostRecent).deletePoint;
-                case 'e'
-            end
+                end
+            % deletes the most recently clicked trap 
+            case 'backspace'
+                if mostRecent >= 0
+                    glb.trap(mostRecent).deletePoint;   
+                end
+            % enables a cursor and adds a trap upon clicking. 'enter' to escape    
+            case 'e'
+                [x,y] = ginput(1); % gets cursor position upon clicking
+                trapIndex = length(glb.trap) + 1;
+                glb.trap(trapIndex) = trap_obj(trapIndex, glb.sz, gca, x, y);
+                glb.trap(trapIndex).drawPoint([x,y]);
         end
     end
-    
+
 end
 
