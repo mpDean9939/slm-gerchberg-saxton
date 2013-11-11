@@ -6,24 +6,26 @@ function GS_alg_fast_gpu()
 % Also called from the trap_obj callback to update the phase and target
 % approximation plots.
     global glb;
+   
+    % ---- GS algorithm ---- % 
     
-    % all dependent calculations done on gpu 
+    % calculations dependent on hologram_phase are done on the gpu 
     hologram_phase = gpuArray.rand(glb.x_src,glb.y_src); 
     
     for k = 1:glb.num   
-        hologram = glb.src_intensity .* exp(1i * hologram_phase);
-        target_approximation = fftshift(fft2 (hologram, glb.x_target, glb.y_target));
-        target_approximation_intensity = abs(target_approximation);
-        target_approximation_angle = angle(target_approximation);
+        hologram = glb.src_intensity .* exp(1i * hologram_phase); % get the current hologram in phasor form
+        target_approximation = fftshift(fft2 (hologram, glb.x_target, glb.y_target)); % optical fourier transform
+        target_approximation_intensity = abs(target_approximation); % current intensity at the target (fourier image)
+        target_approximation_angle = angle(target_approximation); % current angle at the target
         
-        target_approximation = glb.TARGET .* exp(1i * target_approximation_angle);        
-        hologram_approximation = ifftshift(ifft2 (fftshift(target_approximation), glb.x_src, glb.y_src));
-        hologram_phase = angle(hologram_approximation);
+        target_approximation = glb.TARGET .* exp(1i * target_approximation_angle); % update the approximation with the ideal target intensity       
+        hologram_approximation = ifftshift(ifft2 (fftshift(target_approximation), glb.x_src, glb.y_src)); % update the input image with the new approximation
+        hologram_phase = angle(hologram_approximation); % new phase at the input plane
     end
  
-    hologram_phase = phase_shift(hologram_phase);
+    hologram_phase = phase_shift(hologram_phase); 
 
-    % ---- Update Plots ---- 
+    % ---- Update Plots ---- % 
     
     % hologram phase
     p = duplicate_image(hologram_phase, 792, 600); %792x600: hardware dependent parameter
