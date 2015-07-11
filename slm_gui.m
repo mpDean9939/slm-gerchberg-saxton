@@ -1,5 +1,34 @@
 function slm_gui()
-% initializes GUI figures, along with figure positions & properties
+% Enter parameters into Figure 1, separated by commas or spaces, for instance: 
+%
+%  1, 20, 4, 4, 10  
+%  or 
+%  1 20 4 4 10
+%
+% The parameters have the following interpretation: 
+% 
+%       'trap size' : the width and height of the trap, in pixels
+%
+%       'iterations' : the number of iterations used in the
+%           approximation algorithm (Gerchberg-Saxton)
+%
+%       'rows' and 'columns' : the number of rows and columns in the initial
+%           arrangement of traps 
+%
+%       'distance' : the distance in pixels between traps in the initial
+%           arrangement
+%
+% Key presses do the following:
+%
+%       'e' : Enables a cursor, that adds a new trap upon left-click. Press
+%          'enter' to escape without adding a trap.
+%
+%       'w' 'a' 's' 'd' : Moves the most recently clicked trap by 1 pixel
+%
+%       'backspace' : Deletes the most recently clicked trap
+% 
+
+    % initializes GUI figures, along with figure positions & properties
     global glb; % struct to store data across functions
     close all; 
     
