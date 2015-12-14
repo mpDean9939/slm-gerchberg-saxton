@@ -1,2 +1,2 @@
 # slm-gerchberg-saxton
-Matlab implementation of Gerchberg-Saxton algorithm for optical phase retrieval, with a rough GUI
+Optical phase retrieval for optical tweezers with spatial light modulation, and a rough GUI
