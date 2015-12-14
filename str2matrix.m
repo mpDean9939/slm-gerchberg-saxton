@@ -1,5 +1,5 @@
-function out = str2matrix(key, constant) 
-        switch key 
+function out = str2matrix(key, constant)
+        switch key
             case 'w'
                 out = [0 -constant];
             case 'a'

@@ -1,4 +1,5 @@
-function B=phase_shift(A)  % change A from -pi:pi to 0:2*pi
+% change A from -pi:pi to 0:2*pi
+function B=phase_shift(A)
 
 [m,n]=size(A);
 AA=A(:);

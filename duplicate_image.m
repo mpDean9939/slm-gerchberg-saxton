@@ -1,11 +1,12 @@
-function duplication_image = duplicate_image (A,x_grid,y_grid)  % x_grid in x direction, y_grid in y direction
+% Takes the input image, x_grid in x direction, y_grid in y direction
+function duplication_image = duplicate_image (A,x_grid,y_grid)
 
-[m,n] = size(A);   % n in x direction, m in y direction
+[m,n] = size(A);        % n in x direction, m in y direction
 
-X = floor(x_grid/n);   % duplicate time in x
-x = x_grid - X*n;          % columns left for duplication
-Y = floor(y_grid/m);   % duplicate time in y
-y = y_grid - Y*m;          % rows left for duplicatoin
+X = floor(x_grid/n);    % duplicate time in x
+x = x_grid - X*n;       % columns left for duplication
+Y = floor(y_grid/m);    % duplicate time in y
+y = y_grid - Y*m;       % rows left for duplicatoin
 
 % duplicate columns
 B = A;

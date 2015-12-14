@@ -1,24 +1,24 @@
-function GS_initial(m,n,d)
-% First iteration of the complete GS algorithm, initializes trap objects 
+function gs_init(m,n,d)
+% First iteration of the complete GS algorithm, initializes trap objects
 % and other parameters
-    global glb; 
+    global glb;
 
     %**************************************************************************
     % target
     %**************************************************************************
-    
+
     % initialize trap objects into grid, and target image
     N = 200;
     image = zeros(N);
     SQSZ = glb.sz; % trap size in pixels
-    
+
     figure(3);
     trapIndex = 0;
     for i = 1:n
         for j = 1:m
             trapIndex = trapIndex + 1;
             glb.trap(trapIndex) = trap_obj(trapIndex, SQSZ, gca, N/2-(m+1)/2*d+i*d,N/2-(n+1)/2*d+j*d);
-            
+
              ycords = round(N/2-(m+1)/2*d+i*d-SQSZ/2):round(N/2-(m+1)/2*d+i*d+SQSZ/2);
              xcords = round(N/2-(n+1)/2*d+j*d-SQSZ/2):round(N/2-(n+1)/2*d+j*d+SQSZ/2);
              image(xcords, ycords) = 1;
@@ -27,9 +27,9 @@ function GS_initial(m,n,d)
     glb.flag = true; % records that a set of trap objects has been initialized
 
     glb.TARGET = double(image); % target image
-    [glb.x_target,glb.y_target] = size(glb.TARGET);
-    glb.x_src=glb.x_target;
-    glb.y_src=glb.y_target;
+    [glb.x_targ,glb.y_targ] = size(glb.TARGET);
+    glb.x_src=glb.x_targ;
+    glb.y_src=glb.y_targ;
 
     %**************************************************************************
     % computation source
@@ -37,9 +37,9 @@ function GS_initial(m,n,d)
     I0 = 1;
     w0 = 100;     % minimum width, in grid
     w = 200;      % refer to position, in grid
-    
-    x_src = glb.x_target; % x dimension
-    y_src = glb.y_target; % y dimension
+
+    x_src = glb.x_targ; % x dimension
+    y_src = glb.y_targ; % y dimension
     centroid = [round(x_src/2),round(y_src/2)];
     glb.src_intensity = zeros(x_src,y_src);
     for i = 1:x_src
@@ -48,7 +48,7 @@ function GS_initial(m,n,d)
             glb.src_intensity(i, j) = I0*(w0/w)^2*exp(-2*r^2/w^2);
         end
     end
-    
+
     % update source intensity
     imshow(glb.src_intensity, 'parent', glb.sub(2));
     title('source intensity');
@@ -56,6 +56,6 @@ function GS_initial(m,n,d)
     %**************************************************************************
     % Gerchberg and Saxton algorithm
     %**************************************************************************
-    GS_alg_fast_gpu(); % call the GS algorithm to update the approximation intensity
+    gs_fast(); % call the GS algorithm to update the approximation intensity
 
 end
